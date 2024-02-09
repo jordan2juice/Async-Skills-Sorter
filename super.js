@@ -3,18 +3,26 @@
 const superHero = "superhero.json";
 
 // Fetch the JSON file
-fetch(superHero)
-  .then((response) => response.json())
-  .then((data) => {
-    // Sort the data by name
-    data.sort((a, b) => a.name.localeCompare(b.name));
+async function getData(superHero) {
+  const response = await fetch(superHero);
+  const data = await response.json();
+  const sortedData = data.sort((a, b) => {
+    if (a.name < b.name) return -1;
+    if (a.name > b.name) return 1;
+    return 0;
+  });
 
-    // Display the sorted data in the <ul> element
-    const list = document.getElementById("superhero-list");
-    data.forEach((superhero) => {
-      const li = document.createElement("li");
-      li.textContent = `${superhero.name}`;
-      list.appendChild(li);
-    });
-  })
-  .catch((error) => console.error(error));
+  displayCharacters(sortedData);
+
+  getData(superHero);
+
+  // Display the sorted data in the <ul> element
+  const list = document.getElementById("superhero-list");
+  data.forEach((superhero) => {
+    const li = document.createElement("li");
+    li.textContent = `${superhero.name}`;
+    list.appendChild(li);
+  });
+}
+
+getData();
